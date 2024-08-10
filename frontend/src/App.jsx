@@ -1,9 +1,19 @@
+import { useEffect } from 'react';
+import { io } from "socket.io-client";
 import './App.css'
-import SignIn from './components/SignIn'
+
+
+
 function App() {
+  useEffect(()=>{
+    const socket = io("http://localhost:3000/",{ transports : ['websocket'] });
+    socket.on("Hello",() => {
+      console.log("User is connected")
+    })
+  })
   return (
     <>
-      <SignIn />
+      <h1>What do you want to do?</h1>
     </>
   )
 }
