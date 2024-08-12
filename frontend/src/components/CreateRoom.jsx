@@ -1,26 +1,31 @@
 import React, { useState } from "react";
+import { useEffect } from 'react';
+import { io } from "socket.io-client";
 
-export default function JoinRoom() {
+export default function CreateRoom() {
+  const [socket, setSocket] = useState(null);
+  useEffect(()=>{
+    const socketInstance = io("http://localhost:3000/",{ transports : ['websocket'] });
+    setSocket(socketInstance);
+    
+    socketInstance.on("IMP", () => {
+      console.log("IMP");
+    })
+    return () => {
+        if(socketInstance){
+          socketInstance.disconnect();
+        }
+    }
+  },[])
   const [name, setName] = useState("");
   const [roomName, setRoomName] = useState("");
-  function handleSubmit(){
+  function handleSubmit(){    
+    console.log(socket);
     const payload = {
       name: name,
       roomName: roomName
     }
-    fetch("http://localhost:3000/createRoom", {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(payload),
-      mode: 'cors'
-    }).then((res) => {
-      return res.json();
-    }).then((data) => {
-      console.log(data);
-    })
+    socket.emit("testCreate", payload);
   }
   return (
 
@@ -80,7 +85,7 @@ export default function JoinRoom() {
               <button
                 type="submit"
                 className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                value="joinRoom"
+                value="createRoom"
               >
                 Create a new room
               </button>

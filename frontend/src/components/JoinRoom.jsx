@@ -1,6 +1,22 @@
 import React, { useState } from "react";
+import { useEffect } from 'react';
+import { io } from "socket.io-client";
 
 export default function JoinRoom() {
+  const [socket, setSocket] = useState(null);
+  useEffect(()=>{
+    const socketInstance = io("http://localhost:3000/",{ transports : ['websocket'] });
+    setSocket(socketInstance);
+    
+    socketInstance.on("IMP", () => {
+      console.log("IMP");
+    })
+    return () => {
+        if(socketInstance){
+          socketInstance.disconnect();
+        }
+    }
+  },[])
   const [name, setName] = useState("");
   const [roomId, setRoomId] = useState("");
   function handleSubmit(){
@@ -8,19 +24,7 @@ export default function JoinRoom() {
       name: name,
       roomId: roomId
     }
-    fetch("http://localhost:3000/joinRoom", {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(payload),
-      mode: 'cors'
-    }).then((res) => {
-      return res.json();
-    }).then((data) => {
-      console.log(data);
-    })
+    socket.emit("testJoin", payload)
   }
   return (
 
