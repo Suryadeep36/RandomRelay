@@ -1,44 +1,41 @@
 import React, { useState } from "react";
-import { useEffect } from 'react';
-import { io } from "socket.io-client";
 
 export default function CreateRoom() {
-  const [socket, setSocket] = useState(null);
-  useEffect(()=>{
-    const socketInstance = io("http://localhost:3000/",{ transports : ['websocket'] });
-    setSocket(socketInstance);
-    
-    socketInstance.on("IMP", () => {
-      console.log("IMP");
-    })
-    return () => {
-        if(socketInstance){
-          socketInstance.disconnect();
-        }
-    }
-  },[])
   const [name, setName] = useState("");
   const [roomName, setRoomName] = useState("");
-  function handleSubmit(){    
-    console.log(socket);
+  const [status, setStatus] = useState("");
+  function handleSubmit(){
     const payload = {
       name: name,
       roomName: roomName
     }
-    socket.emit("testCreate", payload);
+    fetch("http://localhost:3000/createRoom", {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(payload),
+      mode: 'cors'
+    }).then((res) => {
+      return res.json();
+    }).then((data) => {
+      console.log(data);
+      setStatus(data.msg);
+    })
   }
   return (
-
     <>
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <h1 className=" text-5xl text-center font-bold text-orange-500">Random Relay</h1>
+          <h1 className=" mt-2 text-2xl text-center font-bold text-orange-500">{status}</h1>
         </div>
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
           <form action="/" className="space-y-6" onSubmit={(e) => {
             e.preventDefault();
-            handleSubmit()
+            handleSubmit();
             }}>
             <div>
               <label

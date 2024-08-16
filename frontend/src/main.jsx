@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom/client'
 import App from './App.jsx'
 import JoinRoom from './components/JoinRoom.jsx';
 import CreateRoom from './components/CreateRoom.jsx'
+import Room from './components/Room.jsx'
+
 import {
   createBrowserRouter,
   RouterProvider,
@@ -11,15 +13,19 @@ import {
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <App />
+    element: <App/>
   },
   {
     path: "/joinRoom",
-    element: <JoinRoom />,
+    element: <JoinRoom/>,
   },
   {
     path: "/createRoom",
-    element: <CreateRoom />
+    element: <CreateRoom/>
+  },
+  {
+    path: "/newRoom",
+    element: <Room />
   }
 ]);
 
