@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-
+import { useNavigate } from "react-router-dom";
 export default function CreateRoom() {
   const [name, setName] = useState("");
   const [roomName, setRoomName] = useState("");
   const [status, setStatus] = useState("");
-  function handleSubmit(){
+  const navigate = useNavigate();
+  function handleClick(){
     const payload = {
       name: name,
       roomName: roomName
@@ -22,7 +23,14 @@ export default function CreateRoom() {
     }).then((data) => {
       console.log(data);
       setStatus(data.msg);
+      if(data.msg === "Room created!!"){
+        navigate("/newRoom");
+      }
+      else{
+        navigate("/createRoom");
+      }
     })
+  
   }
   return (
     <>
@@ -33,10 +41,7 @@ export default function CreateRoom() {
         </div>
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form action="/" className="space-y-6" onSubmit={(e) => {
-            e.preventDefault();
-            handleSubmit();
-            }}>
+          <form className="space-y-6">
             <div>
               <label
                 htmlFor="text"
@@ -80,9 +85,10 @@ export default function CreateRoom() {
             </div>
             <div>
               <button
-                type="submit"
+                type="button"
                 className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                 value="createRoom"
+                onClick={handleClick}
               >
                 Create a new room
               </button>

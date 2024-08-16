@@ -1,11 +1,12 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function JoinRoom() {
- 
+  const navigate = useNavigate();
   const [name, setName] = useState("");
   const [roomId, setRoomId] = useState("");
   const [status, setStatus] = useState("");
-  function handleSubmit(){
+  function handleClick(){
     const payload = {
       name: name,
       roomId: roomId
@@ -23,6 +24,12 @@ export default function JoinRoom() {
     }).then((data) => {
       console.log(data);
       setStatus(data.msg);
+      if(data.msg === "Room Joined!!"){
+        navigate("/newRoom");
+      }
+      else{
+        navigate("/joinRoom");
+      }
     })
   }
   return (
@@ -35,10 +42,7 @@ export default function JoinRoom() {
         </div>
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form action="/" className="space-y-6" onSubmit={(e) => {
-            e.preventDefault();
-            handleSubmit()
-            }}>
+          <form className="space-y-6">
             <div>
               <label
                 htmlFor="text"
@@ -82,9 +86,10 @@ export default function JoinRoom() {
             </div>
             <div>
               <button
-                type="submit"
+                type="button"
                 className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                 value="joinRoom"
+                onClick={handleClick}
               >
                 Join a room
               </button>
