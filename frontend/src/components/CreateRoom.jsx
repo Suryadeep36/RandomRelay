@@ -24,7 +24,7 @@ export default function CreateRoom() {
       console.log(data);
       setStatus(data.msg);
       if(data.msg === "Room created!!"){
-        navigate("/newRoom");
+        navigate("/newRoom/" + roomName);
       }
       else{
         navigate("/createRoom");

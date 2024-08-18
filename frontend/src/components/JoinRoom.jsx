@@ -25,7 +25,7 @@ export default function JoinRoom() {
       console.log(data);
       setStatus(data.msg);
       if(data.msg === "Room Joined!!"){
-        navigate("/newRoom");
+        navigate("/newRoom/" + roomId);
       }
       else{
         navigate("/joinRoom");

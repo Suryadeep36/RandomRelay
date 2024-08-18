@@ -8,6 +8,7 @@ import Room from './components/Room.jsx'
 import {
   createBrowserRouter,
   RouterProvider,
+  useLoaderData,
 } from "react-router-dom";
 
 const router = createBrowserRouter([
@@ -24,12 +25,20 @@ const router = createBrowserRouter([
     element: <CreateRoom/>
   },
   {
-    path: "/newRoom",
-    element: <Room />
+    path: "/newRoom/:test",
+    loader: ((params) => {
+      return {
+        roomName: params.params.test 
+      };
+    }),
+    element: <RoomWaper />
   }
 ]);
 
-
+function RoomWaper(){
+  const {roomName} = useLoaderData();
+  return <Room roomName = {roomName} />
+}
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
      <RouterProvider router={router} />
